@@ -1,5 +1,13 @@
 class idk{
 
+    check(i: number){
+        let valData = (document.getElementById("inputValue"+i) as HTMLInputElement);
+        if(isNaN(Number(valData.value))){
+                    alert("Input filed "+i +" is not a number");
+                    valData.value="";
+                }
+    }
+    
     constructor(){
         const button = document.getElementById("generate");
         button.addEventListener("click", ()=> this.generate());
@@ -12,6 +20,7 @@ class idk{
         for(let i = 1; i<=quantity; i++){
             let newInp = document.createElement("input");
             newInp.id="inputValue"+i;
+            newInp.addEventListener("change", ()=> this.check(i));
             cont.appendChild(newInp);
         }
         let buttonEl = document.createElement("button");
@@ -52,12 +61,23 @@ class idk{
         return _min;
     }
 
+    isAllValuesNotEmpty(quantity: number){
+        for(let i = 1; i<=quantity; i++){
+            let valData = (document.getElementById("inputValue"+i) as HTMLInputElement);
+            if(valData.value.trim()==""){
+                alert("Input filed "+i +" is empty");
+                return false;
+            }
+        }
+        return true;
+    }
+
     calculateAndShow(quantity: number){
+        if(this.isAllValuesNotEmpty(quantity)){
         let varr = new Array();
         console.log(quantity);
         for(let i = 1; i<=quantity; i++){
             let valData = (document.getElementById("inputValue"+i) as HTMLInputElement).value;
-            //console.log(valData);
             varr.push(+valData)
         }
         const _sum = this.sum(varr);
@@ -75,7 +95,13 @@ class idk{
         const _avg = this.avg(varr);
         let avgBox = (document.getElementById("avg") as HTMLInputElement);
         avgBox.value = _avg.toString();
+        }
+        else{
+            alert("To get results make sure all fiels are not empty");
+        }
+        
     }
+
 
 }
 let obj = new idk();
