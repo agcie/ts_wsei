@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "es2018",
+            "dom"
+        ]
+    },
+    "files":[
+        "index.ts"
+    ]
+  }
