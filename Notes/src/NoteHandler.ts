@@ -19,8 +19,12 @@ export class NoteHandler{
     createNoteDiv(not: objectNote) {        
         let place:HTMLDivElement;
         not.note.pinned ? place =  document.querySelector("#weatherBlocksPinned") :  place = document.querySelector("#weatherBlocks"); 
+        if(not.note.color==""){
+            not.note.color="#ffffff";
+        }
         let WeatherDiv= `<div class="weatherInfo" draggable="true"" id=id`+not.id+`>
-        <br/>`+not.note.title+` <br/> `+not.note.body+`
+        <br/><h3 style="color: #`+ not.note.color+`;" >`+not.note.title+
+        ` </h3><br/> `+not.note.body+`
         <button id="note`+not.id+`" class="delbtn"> X</button><div id="tagsDiv">`;
         not.note.tags.forEach(element => {
             let color: string;

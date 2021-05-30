@@ -99,6 +99,8 @@ export class AppStorage{
         let notpinned :HTMLDivElement = document.querySelector("#weatherBlocksPinned");
         let wrappedHTML = `<div class="weatherInfo" draggable="true"" id=id`+id+`> `+target.innerHTML+`<\div>`;
         notpinned.insertAdjacentHTML( 'beforeend',wrappedHTML);
+
+
     }
 
     dropOnUnPinned(event : DragEvent){
@@ -115,7 +117,7 @@ export class AppStorage{
 
         let notpinned :HTMLDivElement = document.querySelector("#weatherBlocks");
         let wrappedHTML = `<div class="weatherInfo" draggable="true"" id=id`+id+`> `+target.innerHTML+`<\div>`;
-        notpinned.insertAdjacentHTML( 'beforeend',wrappedHTML);
+
     }
 
     delNote(id: string){
