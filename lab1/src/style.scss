@@ -1,0 +1,38 @@
+$light: #FFF5DA;
+$dark: #5D534A;
+$medium : #D6D2C4;
+$accent: #F7DAD9;
+$white: #faf6ee;
+$black: #2f2d2a;
+
+body {
+  background-color: $white;
+  color: $black;
+  font-size: xxx-large;
+}
+
+#outputs{
+  background-color: $accent;
+  color: $dark;
+  #errors{
+    color: red;
+  }
+  #results{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+#blocks{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  input{
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 10px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: $medium;
+    border: 1px solid $dark;
+  }
+}
