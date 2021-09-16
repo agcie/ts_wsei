@@ -49,19 +49,25 @@ it('Delete note', ()=>{
 
 
 describe('Puppeter', () => {
-        // beforeEach((): void => {
-        //         jest.setTimeout(60000);
-        // })
+
   it('trying"', async () => {
           const browser = await puppeteer.launch({ headless: false, slowMo: 30 })
           const page = await browser.newPage();
 
-          await page.goto('http://localhost:8080');
-          await page.waitFor(20000);
+          await page.goto('https://agcie.github.io/Notes/index.html');
           await expect(page.title()).resolves.toMatch('Notes');
-          // await expect(page).toFillForm('form[name="myForm"]', {
-          //         firstName: 'James',
-          //         lastName: 'Bond',
-          // })
+
+          await page.type('#title', 'Title');
+          await page.type('#body', 'body');
+          await page.type('#tags', 'tag1, tag2');
+
+          const pinned = await page.$("#pinned");
+          await pinned.click();
+
+          const green = await page.$(".green");
+          await green.click();
+
+          await page.keyboard.press('Enter');
+
   });
 });

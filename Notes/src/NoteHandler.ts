@@ -18,8 +18,8 @@ export interface note{
 let colors:string[] = ["null"];
 let tagTab:string[] = ["null"] ;
 
-const db: DataBase= new FireDB();
-//const db: DataBase= new LocalDB();
+//const db: DataBase= new FireDB();
+const db: DataBase= new LocalDB();
 
 export class NoteHandler {
 
@@ -84,43 +84,9 @@ export class NoteHandler {
             div.style.boxShadow =" 5px 10px 18px "+bgColor;
          } )
         console.log("BBB")
-    }/*
-    changePinned(event : DragEvent){
-        let data  = event.dataTransfer.getData("text");
-    }
-    dropOnPinned(event : DragEvent){
-        event.preventDefault();
-        const target = event.target as HTMLElement;
-
-        let id = target.id.substr(2,3);
-        const newNote = localStorage.getItem(id);
-        let note = JSON.parse(newNote);
-        note.pinned = true;
-        localStorage.setItem(id, JSON.stringify(note));
-
-        this.removeNoteDiv(id);
-
-        let notpinned :HTMLDivElement = document.querySelector("#weatherBlocksPinned");
-        let wrappedHTML = `<div class="weatherInfo" draggable="true"" id=id`+id+`> `+target.innerHTML+`<\div>`;
-        notpinned.insertAdjacentHTML( 'beforeend',wrappedHTML);
-
     }
 
-    dropOnUnPinned(event : DragEvent){
-        event.preventDefault();
-        const target = event.target as HTMLElement;
 
-        let id = target.id.substr(2,3);
-        const newNote = localStorage.getItem(id);
-        let note = JSON.parse(newNote);
-        note.pinned = false;
-        localStorage.setItem(id, JSON.stringify(note));
-        this.removeNoteDiv(id);
-
-        let notpinned :HTMLDivElement = document.querySelector("#weatherBlocks");
-        let wrappedHTML = `<div class="weatherInfo" draggable="true"" id=id`+id+`> `+target.innerHTML+`<\div>`;
-    }
-*/
     createNoteDiv(not: objectNote) {
         let place:HTMLDivElement;
         not.note.pinned ? place =  document.querySelector("#weatherBlocksPinned") :  place = document.querySelector("#weatherBlocks");
@@ -128,25 +94,46 @@ export class NoteHandler {
             not.note.color="#ffffff";
         }
         let WeatherDiv = document.createElement("div");
-        let text= `<div class="weatherInfo" draggable="true"" id=id`+not.id+`>
-        <br/><h3 style="color: #`+ not.note.color+`;" >`+not.note.title+
-            ` </h3><br/> `+not.note.body+`
-        <button id="note`+not.id+`" class="delbtn"> X</button><div id="tagsDiv">`;
+        WeatherDiv.className = "weatherInfo";
+        WeatherDiv.id="id"+not.id;
+        WeatherDiv.draggable = true;
+
+        let title = document.createElement("h3");
+        title.style.color = "#"+not.note.color;
+        title.innerHTML = not.note.title;
+        let body = document.createElement("div");
+        body.innerHTML = not.note.body
+
+        let delButton = document.createElement("button");
+        delButton.id = "note"+not.id;
+        delButton.className = "delbtn";
+        delButton.innerHTML = "X";
+
+        let tagsDiv = document.createElement("div");
+        tagsDiv.id ="tagsDiv";
+
         not.note.tags.forEach(element => {
             let color: string;
             if(tagTab.includes(element) ){
-                color = colors[ tagTab.indexOf(element)];
+                color = colors[tagTab.indexOf(element)];
             }
             else{
                 color = Math.floor(Math.random()*16777215).toString(16);
                 colors.push(color);
                 tagTab.push(element);
             }
-            text+=`<button class="tag`+element+` tagClass" style="background-color: #`+ color+`; " >`+element+`</button>`;
+            let tagButton = document.createElement("button");
+            tagButton.style.backgroundColor = "#"+color;
+            tagButton.className = "tag"+element+ " tagClass";
+            tagButton.innerHTML = element;
+            tagsDiv.appendChild(tagButton);
         });
-        ;
-        text+="</div>";
-        WeatherDiv.innerHTML = text;
+
+
+        WeatherDiv.appendChild(title);
+        WeatherDiv.appendChild(body);
+        WeatherDiv.appendChild(delButton);
+        WeatherDiv.appendChild(tagsDiv);
         place.appendChild(WeatherDiv);
         let elem = document.querySelector("#note"+not.id);
         elem.addEventListener("click", () => this.delNote(not.id));
@@ -158,4 +145,39 @@ export class NoteHandler {
         element.parentNode.removeChild(element);
     }
 
+    async dropOnPinned(event : DragEvent){
+        console.log("DROP PINNED")
+        event.preventDefault();
+        const target = event.target as HTMLElement;
+
+        //get dragged note
+        let id = target.id.substr(2);
+        const newNote : note = await db.getNote(id)
+
+        //set property pinned to true
+        newNote.pinned = true;
+
+        //add note with changed property to db and delete old one
+        const nh = new NoteHandler()
+        await nh.addNote(newNote);
+        await nh.delNote(id);
+
+    }
+
+    async  dropOnUnPinned(event : DragEvent){
+        event.preventDefault();
+        const target = event.target as HTMLElement;
+
+        //get dragged note
+        let id = target.id.substr(2);
+        const newNote : note = await db.getNote(id)
+
+        //set property pinned to false
+        newNote.pinned = false;
+
+        //add note with changed property to db
+        const nh = new NoteHandler()
+        await nh.addNote(newNote);
+        await nh.delNote(id);
+    }
 }

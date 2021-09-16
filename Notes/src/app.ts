@@ -1,20 +1,20 @@
 
-
+import "./styles.scss";
 import {note, objectNote, NoteHandler} from './NoteHandler'
 
-const  storageHandler: NoteHandler = new NoteHandler();
+const  noteHandler: NoteHandler = new NoteHandler();
 
 export class App{
 
     public constructor(){
         document.addEventListener('keypress', this.onKeyPress);
         let pinned :HTMLDivElement = document.querySelector("#weatherBlocksPinned");
-        //let notpinned :HTMLDivElement = document.querySelector("#weatherBlocks");
+        let notpinned :HTMLDivElement = document.querySelector("#weatherBlocks");
         
-       // pinned.addEventListener("dragend", storageHandler.dropOnUnPinned);
-       // notpinned.addEventListener("dragend", storageHandler.dropOnPinned);
-        
-        storageHandler.createNoteBlocks();
+        pinned.addEventListener("dragend", noteHandler.dropOnUnPinned);
+        notpinned.addEventListener("dragend", noteHandler.dropOnPinned);
+
+        noteHandler.createNoteBlocks();
     }
 
     onKeyPress(ev: KeyboardEvent): void{
@@ -30,15 +30,15 @@ export class App{
 
            let newNote :note ={title:title.value , body:body.value, date: now.toString(), tags: noteTags, pinned: isPinned, color:getColor()};
 
-           storageHandler.addNote(newNote);
+            noteHandler.addNote(newNote);
            }
         }
 
 }
 
 function getColor(): string{
-    const colorsTab : string[]= ["red", "orange", "green", "yellow", "olive", "teal", "blue", "violet", "purple", "pink"];
-    const colorsMap: string[]= ["DB2828", "F2711C", "FBBD08", "B5CC18", "21BA45", " 00B5AD", "2185D0", " 6435C9" , "A333C8", "E03997"]
+    const colorsTab : string[]= ["red", "orange",  "yellow", "olive", "green", "teal", "blue", "violet", "purple", "pink"];
+    const colorsMap: string[]= ["DB2828", "F2711C", "FBBD08", "B5CC18", "21BA45", "00B5AD", "2185D0", "6435C9" , "A333C8", "E03997"]
     let choosenColor = "ffffff"
     colorsTab.forEach(color=> {
         let radioB :  HTMLInputElement= document.querySelector("#"+color);
